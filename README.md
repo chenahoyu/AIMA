@@ -1,11 +1,8 @@
-以下是基于您提供的 `README.md` 文件内容整理的中英对照版本。
-
----
-
 # AI‑MA (v0.5) — Natural‑language grandMA3 OSC Assistant
 # AI‑MA (v0.5) — 自然语言 grandMA3 OSC 助手
 
 AI‑MA is a Streamlit-based web console that turns natural-language lighting requests into structured commands and sends them to **grandMA3** via **OSC/UDP** (`/cmd`).
+
 AI‑MA 是一个基于 Streamlit 的 Web 控制台，它能将自然语言灯光需求转化为结构化指令，并通过 **OSC/UDP** (`/cmd`) 发送至 **grandMA3** 控制台。
 
 This README describes the **`backup/v0.5/`** snapshot.
@@ -17,20 +14,28 @@ This README describes the **`backup/v0.5/`** snapshot.
 
 * **Chat-style UI**: Built with Streamlit (`app.py`).
     **对话式 UI**: 使用 Streamlit 构建 (`app.py`)。
+
 * **Natural language → JSON → grandMA3 commands**: Seamless translation of intent to syntax.
     **自然语言 → JSON → grandMA3 指令**: 实现意图到语法的无缝转换。
+
 * **OSC sender**: Features command sanitization and small inter-command delay for stability.
     **OSC 发送器**: 具备指令清洗功能及指令间微秒级延迟，确保传输稳定性。
+
 * **Conversation persistence**: Local JSON storage for history.
     **对话持久化**: 使用本地 JSON 文件保存历史记录。
+
 * **Local caching**: Stores API keys, base URL, model ID, and UI preferences.
     **本地缓存**: 缓存 API 密钥、基准 URL、模型 ID 及 UI 偏好设置。
+
 * **CLI launcher**: Includes language selection, IP/port prompts, and environment checks.
     **命令行启动器**: 支持语言选择、IP/端口提示及环境检查 (`scripts/launcher.py`)。
+
 * **Network modes**: Supports direct connection, system proxy, env SOCKS5, or custom proxies.
     **网络模式**: 支持直连、系统代理、环境变量 SOCKS5 及自定义代理。
+
 * **Global UI language switching**: Supports ZH/EN/JA for the console.
     **全球化多语言切换**: 控制台支持中文、英文、日文切换。
+
 * **Static developer doc**: Offline Chinese documentation in HTML format.
     **静态开发文档**: 提供离线版中文开发文档 (`docs/开发文档.html`)。
 
@@ -40,14 +45,19 @@ This README describes the **`backup/v0.5/`** snapshot.
 
 * **Python**: 3.9+ recommended (3.10+ preferred).
     **Python**: 推荐 3.9+ (首选 3.10+)。
+
 * **UI**: Streamlit.
     **界面**: Streamlit。
+
 * **LLM**: OpenAI Python SDK (OpenAI-compatible Chat Completions endpoint).
     **大模型**: OpenAI Python SDK (兼容 OpenAI 的聊天补全接口)。
+
 * **HTTP**: `httpx` (with SOCKS support).
     **HTTP**: `httpx` (支持 SOCKS 代理)。
+
 * **Models**: Pydantic v2.
     **模型层**: Pydantic v2。
+
 * **OSC**: `python-osc`.
     **OSC**: `python-osc`。
 
