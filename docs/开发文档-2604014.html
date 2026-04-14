@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI-MA v0.5 开发文档</title>
+    <style>
+      :root{
+        --bg: #0b1020;
+        --card: rgba(255,255,255,0.06);
+        --card2: rgba(255,255,255,0.08);
+        --text: rgba(255,255,255,0.92);
+        --muted: rgba(255,255,255,0.72);
+        --muted2: rgba(255,255,255,0.62);
+        --border: rgba(255,255,255,0.12);
+        --accent: #6aa9ff;
+        --ok: #38d39f;
+        --warn: #ffcc66;
+        --danger: #ff6b6b;
+        --shadow: 0 10px 30px rgba(0,0,0,0.30);
+        color-scheme: dark;
+      }
+      html, body { height: 100%; }
+      body{
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(1200px 600px at 10% 0%, rgba(106,169,255,0.18), transparent 55%),
+                    radial-gradient(900px 500px at 90% 10%, rgba(56,211,159,0.12), transparent 60%),
+                    linear-gradient(180deg, #070a14 0%, var(--bg) 100%);
+        color: var(--text);
+      }
+      a{ color: var(--accent); text-decoration: none; }
+      a:hover{ text-decoration: underline; }
+      .container{
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 18px 80px;
+      }
+      header{
+        display: grid;
+        gap: 10px;
+        padding: 18px 18px 16px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      header h1{
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0.2px;
+      }
+      header .meta{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .pill{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.20);
+      }
+      .grid{
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      @media (max-width: 920px){
+        .grid{ grid-template-columns: 1fr; }
+      }
+      nav{
+        position: sticky;
+        top: 14px;
+        align-self: start;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.22);
+        border-radius: 16px;
+        padding: 12px;
+      }
+      nav .title{
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--muted);
+        margin: 2px 6px 10px;
+      }
+      nav a{
+        display: block;
+        padding: 8px 10px;
+        border-radius: 10px;
+        color: var(--text);
+        border: 1px solid transparent;
+      }
+      nav a:hover{
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.10);
+        text-decoration: none;
+      }
+      main{
+        display: grid;
+        gap: 16px;
+      }
+      section{
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+      }
+      section h2{
+        margin: 4px 0 10px;
+        font-size: 16px;
+        letter-spacing: 0.2px;
+      }
+      section p, section li{
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 14px;
+      }
+      .note{
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.18);
+        color: var(--muted);
+      }
+      .note strong{ color: var(--text); }
+      .two{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 820px){
+        .two{ grid-template-columns: 1fr; }
+      }
+      pre{
+        margin: 10px 0 0;
+        padding: 12px 12px;
+        background: rgba(0,0,0,0.35);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        overflow: auto;
+        color: rgba(255,255,255,0.90);
+        font-size: 12.5px;
+        line-height: 1.55;
+      }
+      code{
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.95em;
+      }
+      .kpi{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+      }
+      @media (max-width: 720px){
+        .kpi{ grid-template-columns: 1fr; }
+      }
+      .kpi .item{
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+      }
+      .kpi .label{ color: var(--muted2); font-size: 12px; }
+      .kpi .value{ margin-top: 6px; font-weight: 700; font-size: 13px; color: var(--text); }
+      .tag{
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.86);
+        font-size: 12px;
+        margin-right: 6px;
+        margin-bottom: 6px;
+      }
+      footer{
+        margin-top: 16px;
+        color: var(--muted2);
+        font-size: 13px;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.20);
+        border-radius: 16px;
+      }
+      .danger{ color: var(--danger); }
+      .ok{ color: var(--ok); }
+      .warn{ color: var(--warn); }
+      .hr{
+        height: 1px;
+        background: rgba(255,255,255,0.10);
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>AI‑MA v0.5 开发文档（静态 HTML）</h1>
+        <div class="meta">
+          <span class="pill">范围：<code>backup/v0.5/</code></span>
+          <span class="pill">UI：Streamlit</span>
+          <span class="pill">协议：OSC（UDP / <code>/cmd</code>）</span>
+          <span class="pill">LLM：OpenAI 兼容 Chat Completions</span>
+        </div>
+        <div class="note">
+          <strong>项目定位：</strong>将自然语言转换为 <strong>grandMA3</strong> 控制台命令，并通过 OSC 下发到 MA3，实现“语义编程式”的灯光控制工作流。
+        </div>
+      </header>
+
+      <div class="grid">
+        <nav aria-label="目录">
+          <div class="title">目录</div>
+          <a href="#overview">项目概览</a>
+          <a href="#stack">技术栈</a>
+          <a href="#structure">文件结构</a>
+          <a href="#components">组件/模块功能</a>
+          <a href="#devpoints">开发要点</a>
+          <a href="#run">启动与调试</a>
+          <a href="#security">安全注意事项</a>
+          <a href="#developer">开发者信息</a>
+        </nav>
+
+        <main>
+          <section id="overview">
+            <h2>项目概览</h2>
+            <p>
+              AI‑MA 是一个基于 Streamlit 的 Web 控制台：用户输入自然语言（例如“把 101 到 105 号灯调成红色，亮度 50%”），系统调用 LLM 生成结构化 JSON，再由 UI 组装为 grandMA3 OSC 命令并下发。
+            </p>
+            <div class="kpi">
+              <div class="item">
+                <div class="label">主入口</div>
+                <div class="value"><code>app.py</code></div>
+              </div>
+              <div class="item">
+                <div class="label">核心模块</div>
+                <div class="value"><code>src/ai</code> / <code>src/osc</code> / <code>src/utils</code></div>
+              </div>
+              <div class="item">
+                <div class="label">本地持久化</div>
+                <div class="value"><code>src/.conversations</code> / <code>src/.api_cache</code></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="stack">
+            <h2>技术栈</h2>
+            <p>依赖版本以 <code>requirements.txt</code> 为准（下列为 v0.5 关键技术栈摘要）。</p>
+            <div>
+              <span class="tag">Python 3.10+（建议）</span>
+              <span class="tag">Streamlit 1.28.0</span>
+              <span class="tag">Pydantic v2</span>
+              <span class="tag">OpenAI SDK 1.6.x（兼容接口）</span>
+              <span class="tag">httpx（含 SOCKS 代理）</span>
+              <span class="tag">python-osc</span>
+              <span class="tag">ChromaDB（预留知识库/向量检索）</span>
+              <span class="tag">pytest / black / flake8</span>
+            </div>
+            <div class="two">
+              <div class="note">
+                <strong>前端形态：</strong>Streamlit 单页应用，UI 由 <code>app.py</code> 直接渲染（无独立 React/Vue）。
+              </div>
+              <div class="note">
+                <strong>通信形态：</strong>LLM 通过 HTTP（OpenAI 兼容）；MA3 通过 OSC/UDP（地址固定 <code>/cmd</code>）。
+              </div>
+            </div>
+          </section>
+
+          <section id="structure">
+            <h2>文件结构（v0.5 摘要）</h2>
+            <p>以下为关键目录/文件（省略非核心文件）。</p>
+            <pre><code>backup/v0.5/
+├─ app.py                      # Streamlit 主界面 + 业务编排（含 i18n、缓存 UI、发送确认等）
+├─ app_simple.py               # 早期/简化版本（参考用）
+├─ app_modern.py               # 现代化 UI 实验版本（参考用）
+├─ app_complete.py             # 完整版/实验版（参考用）
+├─ config.py                   # Pydantic Settings（默认 host/port、base_url、model_id 等）
+├─ requirements.txt            # Python 依赖
+├─ .streamlit/
+│  └─ config.toml              # Streamlit 主题/外观配置
+├─ src/
+│  ├─ ai/
+│  │  ├─ models.py             # Pydantic 数据结构（GMA3Command / CommandAction 等）
+│  │  └─ translator.py         # LLM 调用（OpenAI 兼容 chat.completions）+ JSON 修复兜底
+│  ├─ osc/
+│  │  └─ osc_client.py         # OSC 客户端（向 /cmd 发送清洗后的命令字符串）
+│  ├─ utils/
+│  │  ├─ api_key_cache.py      # API Key/配置缓存（Base64 + 600 权限）
+│  │  └─ conversation_manager.py# 对话持久化（JSON 文件）
+│  ├─ .api_cache/
+│  │  └─ api_keys.json         # 本地缓存文件（注意安全）
+│  └─ .conversations/
+│     └─ conversations.json    # 对话历史
+├─ data/                       # fixtures / presets / sequences / knowledge_base 等
+└─ docs/
+   └─ 开发文档.html             # 本文档（静态 HTML）</code></pre>
+            <div class="note">
+              <strong>说明：</strong><code>src/.api_cache</code> 与 <code>src/.conversations</code> 属于运行时落盘数据，若用于多人协作或云部署，应按环境隔离或改为外部存储。
+            </div>
+          </section>
+
+          <section id="components">
+            <h2>组件 / 模块功能</h2>
+            <ul>
+              <li><strong><code>app.py</code>（Streamlit UI + 编排）</strong>
+                <ul>
+                  <li>侧边栏：对话管理、OSC 设置、API 设置、网络/代理策略、自动化开关、使用说明。</li>
+                  <li>主区：状态条（MA 连接 + API 状态 + Model）、聊天记录、输入框、待发送确认与自动发送。</li>
+                  <li>本地缓存：API Key、API Base URL、模型 ID、UI 开关、语言等（通过 <code>src/utils/api_key_cache.py</code>）。</li>
+                </ul>
+              </li>
+              <li><strong><code>src/ai/translator.py</code>（语义翻译器）</strong>
+                <ul>
+                  <li>使用 OpenAI 兼容 <code>chat.completions.create</code> 调用模型，强约束输出 <strong>纯 JSON</strong>（并使用 <code>actions</code> 列表结构）。</li>
+                  <li>包含 JSON 提取/修复兜底（例如模型输出夹杂文本）。</li>
+                  <li>支持代理与网络策略：<code>trust_env</code>、<code>proxy_url</code>（含 socks5）。</li>
+                </ul>
+              </li>
+              <li><strong><code>src/osc/osc_client.py</code>（OSC 客户端）</strong>
+                <ul>
+                  <li>固定向 OSC 地址 <code>/cmd</code> 发送字符串（grandMA3 侧解析命令）。</li>
+                  <li>发送前清洗命令：禁止包含 <code>/cmd</code> 前缀、去掉外层引号。</li>
+                  <li>多条命令之间加入微小延迟（默认 50ms）提高稳定性。</li>
+                </ul>
+              </li>
+              <li><strong><code>src/utils/conversation_manager.py</code>（对话管理）</strong>
+                <ul>
+                  <li>创建/列举/删除/重命名对话；消息追加；持久化到 <code>src/.conversations/conversations.json</code>。</li>
+                  <li>按更新时间倒序列出，便于 UI 显示“最近会话”。</li>
+                </ul>
+              </li>
+              <li><strong><code>src/utils/api_key_cache.py</code>（配置缓存）</strong>
+                <ul>
+                  <li>将 key/value 缓存到 <code>src/.api_cache/api_keys.json</code>；写入后设置文件权限 <code>600</code>。</li>
+                  <li class="warn"><strong>注意：</strong>当前为 Base64 编码，不等价于安全加密。</li>
+                </ul>
+              </li>
+              <li><strong><code>config.py</code>（默认配置）</strong>
+                <ul>
+                  <li>使用 Pydantic Settings 统一管理：MA3 OSC host/port、OpenAI base_url、model_id、数据目录等。</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+
+          <section id="devpoints">
+            <h2>开发要点（重要）</h2>
+            <ul>
+              <li><strong>Streamlit 的 <code>st.session_state</code> 是核心状态容器</strong>：UI 交互会触发 rerun，所有“跨 rerun 状态”需要放在 session_state。</li>
+              <li><strong>对话选择器与 rerun</strong>：下拉框（selectbox）一旦实例化，直接改同名 key 容易触发异常；推荐“pending 值 → 下次 rerun 写回”的方式。</li>
+              <li><strong>网络/代理策略</strong>：API 调用受系统代理环境变量影响；项目支持 直连/系统代理/环境 SOCKS5/自定义代理，并提供“API 可用性验证”用于快速诊断。</li>
+              <li><strong>OSC 命令必须清洗</strong>：发送给 grandMA3 的 value 不能带 <code>/cmd</code> 前缀；字符串外层引号需要剥离。</li>
+              <li><strong>多命令发送节流</strong>：多条 OSC 连发要加 delay（避免 MA3 解析失败）。</li>
+              <li><strong>缓存落盘的边界</strong>：本地缓存适合个人使用；若上云或多人共享，建议改为环境变量或 Secret Manager。</li>
+              <li><strong>多语言 i18n</strong>：UI 文案采用 key→翻译表的方式集中管理，避免散落硬编码；切换语言应全局 rerun 生效。</li>
+            </ul>
+            <div class="note">
+              <strong>建议约定：</strong>UI 文案、状态提示、错误信息尽量统一走翻译/字典层；避免“部分英文、部分中文、部分硬编码”的不可维护状态。
+            </div>
+          </section>
+
+          <section id="run">
+            <h2>启动与调试</h2>
+            <p>推荐在 <code>backup/v0.5/</code> 下使用虚拟环境启动。</p>
+            <pre><code># 1) 创建虚拟环境（如未创建）
+python3 -m venv venv
+
+# 2) 安装依赖
+./venv/bin/python -m pip install -r requirements.txt
+
+# 3) 启动（本地开发）
+./venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8502</code></pre>
+            <div class="note">
+              <strong>常见问题：</strong>
+              <ul>
+                <li><span class="danger">页面打不开</span>：确认 Streamlit 进程是否启动、端口是否被占用、是否使用了正确的 Python（不要用系统 <code>python</code> 指向 Python2）。</li>
+                <li><span class="warn">API 连接失败</span>：优先在 UI 中点击“验证 API 可用性”，并切换网络方式（直连/系统代理/SOCKS/自定义）。</li>
+              </ul>
+            </div>
+          </section>
+
+          <section id="security">
+            <h2>安全注意事项</h2>
+            <ul>
+              <li><strong>不要提交真实的 <code>.env</code></strong>：只保留 <code>.env.example</code> 作为示例。</li>
+              <li><strong>API Key 不建议落盘</strong>：当前实现使用 Base64 编码，属于“可读性处理”，不是加密；若部署公网建议改为 Secret 管理并增加访问控制。</li>
+              <li><strong>公网部署必须做鉴权</strong>：建议通过 Nginx/Caddy 增加 HTTPS、Basic Auth、IP 白名单等。</li>
+            </ul>
+          </section>
+
+          <section id="developer">
+            <h2>开发者信息</h2>
+            <p class="note">
+              <strong>开发者邮箱：</strong><a href="mailto:chenhaoyuuu0917@gmail.com">chenhaoyuuu0917@gmail.com</a><br />
+              <strong>声明：</strong>本文档末尾署名邮箱为本项目开发者联系方式（开发者）。
+            </p>
+          </section>
+
+          <footer>
+            文档版本：AI‑MA v0.5（静态 HTML）｜建议将本文档随版本一同维护，以便交接与二次开发。
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
