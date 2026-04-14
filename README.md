@@ -84,7 +84,7 @@ python3 -m venv venv
 The launcher guides you through language selection, server setup, and environment checks.
 启动器将引导您完成语言选择、服务器设置和环境检查。
 ```bash
-/Users/chenhaoyu/AI-MA/venv/bin/python backup/v0.5/scripts/launcher.py
+/v0.5/scripts/launcher.py
 ```
 
 ---
