@@ -1,5 +1,5 @@
-# AI‑MA (v0.5) — Natural‑language grandMA3 OSC Assistant
-# AI‑MA (v0.5) — 自然语言 grandMA3 OSC 助手
+# AI‑MA (v0.5) — AI grandMA3 OSC Assistant
+# AI‑MA (v0.5) — AI grandMA3 OSC 助手
 
 AI‑MA is a Streamlit-based web console that turns natural-language lighting requests into structured commands and sends them to **grandMA3** via **OSC/UDP** (`/cmd`).
 
